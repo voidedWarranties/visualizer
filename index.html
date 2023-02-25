@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIANGLES</title>
+
+    <style>
+        body {
+            background: black;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="video" width="1920" height="1080"></canvas>
+
+    <canvas id="view"></canvas>
+
+    <script src="js/util.js"></script>
+
+    <script src="js/lib/beatdetector.js"></script>
+    <script src="js/lib/pixi.min.js"></script>
+    <script src="js/lib/color-thief.umd.js"></script>
+    <script src="js/lib/colorsys.js"></script>
+    <script src="js/lib/tween.umd.js"></script>
+    <script src="js/TriangleContainer.js"></script>
+    <script src="js/BarContainer.js"></script>
+    <script src="js/DebugContainer.js"></script>
+    <script src="js/ProjectileContainer.js"></script>
+    <script src="js/TouhouContainer.js"></script>
+
+    <script src="js/common.js"></script>
+
+    <script>
+        // GLOBALS
+        //////////
+
+        // Secondary Window
+        var wind;
+        var graph;
+        var ctx;
+        var video;
+
+        // Web Audio
+        var context;
+        var analyser;
+        var song;
+
+        const videoCanvas = document.getElementById("video");
+        const videoCtx = videoCanvas.getContext("2d");
+
+        function onPlayerReady(event) {
+            if (context) context.close();
+
+            const yt = wind.document.getElementById("player");
+            video = yt.contentWindow.document.querySelector("video");
+
+            context = new AudioContext();
+            const src = context.createMediaElementSource(video);
+            analyser = context.createAnalyser();
+
+            src.connect(analyser);
+            analyser.connect(context.destination);
+
+            analyser.fftSize = fftSize;
+
+            song = new stasilo.BeatDetector(context, src, {
+                sens: 5.0,
+                visualizerFFTSize: 256,
+                analyserFFTSize: 256,
+                passFreq: 600
+            });
+
+            graph = wind.document.getElementById("graph");
+            ctx = graph.getContext("2d");
+            clearCanvas(graph, ctx);
+        }
+
+        function animate() {
+            if (!video) return;
+
+            videoCanvas.width = window.innerWidth;
+            videoCanvas.height = window.innerHeight;
+
+            const putHeight = window.innerHeight;
+            const putWidth = Math.floor(putHeight * (video.clientWidth / video.clientHeight));
+
+            videoCtx.drawImage(video, (window.innerWidth - putWidth) / 2, (window.innerHeight - putHeight) / 2, putWidth, putHeight);
+
+            const ads = ["ytp-ad-overlay-slot", "ytp-ad-overlay-image"];
+
+            for (const adId of ads) {
+                const yt = wind.document.getElementById("player");
+                if (yt && yt.contentWindow) {
+                    const ad = yt.contentWindow.document.getElementsByClassName(adId)[0];
+                    if (ad) ad.remove();
+                }
+            }
+
+            commonAnimate(video);
+        }
+
+        function onPlayerStateChange(event) {
+            setVideoURL(event.target.getVideoUrl());
+        }
+
+        function openYoutube() {
+            wind = window.open("/embed.html", "_blank", "width=1000,height=600,resizable=no");
+        }
+
+        openYoutube();
+    </script>
+</body>
+
+</html>

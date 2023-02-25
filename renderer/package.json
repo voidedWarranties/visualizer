@@ -1,0 +1,15 @@
+{
+  "name": "renderer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "audio-buffer-from": "^1.1.1",
+    "canvas": "^2.6.1",
+    "fabric": "^4.2.0",
+    "ffmpeg-static": "^4.2.7",
+    "fourier-transform": "^1.1.2",
+    "jsdom": "^16.4.0",
+    "web-audio-api": "^0.2.2"
+  }
+}

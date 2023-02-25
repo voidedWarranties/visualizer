@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizer</title>
+
+    <style>
+        body {
+            background: black;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #background {
+            height: 100%;
+        }
+
+        #view {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #graph {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="background" autoplay muted></video>
+
+    <canvas id="view"></canvas>
+
+    <canvas id="graph" width="320" height="120" style="display: none;"></canvas>
+
+    <script src="../js/util.js"></script>
+
+    <script src="../js/lib/beatdetector.js"></script>
+    <script src="../js/lib/pixi.min.js"></script>
+    <script src="../js/lib/unsafe-eval.min.js"></script>
+    <script src="../js/lib/color-thief.umd.js"></script>
+    <script src="../js/lib/colorsys.js"></script>
+    <script src="../js/lib/tween.umd.js"></script>
+    <script src="../js/TriangleContainer.js"></script>
+    <script src="../js/BarContainer.js"></script>
+    <script src="../js/DebugContainer.js"></script>
+    <script src="../js/ProjectileContainer.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/TouhouContainer.js"></script>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

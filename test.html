@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="js/lib/colorsys.js"></script>
+
+    <script>
+        const arr = [];
+        for (var i = 0; i < 360; i+=4) {
+            const now = parseInt(colorsys.hsvToHex({ h: i, s: 255, v: 255 }).slice(1), 16);
+
+            arr.push(`{Type:1,Flicker:0,Trail:0,Colors:[I;${now}]}`)
+        }
+        console.log(arr.join(","));
+    </script>
+</body>
+</html>

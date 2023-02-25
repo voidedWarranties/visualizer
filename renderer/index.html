@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIANGLES</title>
+
+    <style>
+        body {
+            background: black;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="video" width="1920" height="1080"></canvas>
+
+    <canvas id="view"></canvas>
+
+    <script src="js/util.js"></script>
+
+    <script src="js/lib/pixi-legacy.min.js"></script>
+    <script src="js/lib/color-thief.umd.js"></script>
+    <script src="js/lib/colorsys.js"></script>
+    <script src="js/lib/tween.umd.js"></script>
+    <script src="js/TriangleContainer.js"></script>
+    <script src="js/BarContainer.js"></script>
+    <script src="js/DebugContainer.js"></script>
+    <script src="js/ProjectileContainer.js"></script>
+
+    <script>
+        function loadImage(url) {
+            return new Promise(resolve => {
+                const textImage = new Image();
+                textImage.src = url;
+                textImage.crossOrigin = "anonymous";
+
+                const td = 700;
+                const textCanvas = document.createElement("canvas");
+                textCanvas.width = td;
+                textCanvas.height = td;
+                const textCtx = textCanvas.getContext("2d");
+
+                textImage.onload = () => {
+                    textCtx.drawImage(textImage, 0, 0, td, textImage.height * td / textImage.width);
+                    resolve(textCanvas);
+                }
+            });
+        }
+
+        function loadTextures() {
+            // const textures = ["/fruit-grapes.png", "/fruit-orange.png"];
+            const textures = ["./triangle@2x.png"];
+
+            return Promise.all(textures.map(t => loadImage(t).then(im => new PIXI.Texture.from(im))));
+        }
+
+        var container;
+
+        loadTextures().then(textures => {
+            container = new DebugContainer(app, 512);
+            app.stage.addChild(container);
+        });
+
+        const app = new PIXI.Application({
+            width: 1920,
+            height: 1080,
+            transparent: true,
+            autoStart: false,
+            resolution: window.devicePixelRatio || 1,
+            view: document.getElementById("view")
+        });
+
+        const videoCanvas = document.getElementById("video");
+        const videoCtx = videoCanvas.getContext("2d");
+
+        function animate(data, delta, video, videoHeight, videoWidth) {
+            // videoCanvas.width = 1920;
+            // videoCanvas.height = 1080;
+
+            // const putHeight = 1080;
+            // const putWidth = Math.floor(putHeight * (videoHeight / videoWidth));
+
+            // videoCtx.drawImage(video, (1920 - putWidth) / 2, (1080 - putHeight) / 2, putWidth, putHeight);
+
+            container.update(data);
+            app.render();
+        }
+    </script>
+</body>
+
+</html>

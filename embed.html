@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>YouTube</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+        }
+
+        #graph {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #controls {
+            float: right;
+            width: 22%;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="player"></div>
+    <canvas id="graph" width="320" height="120" style="display: none;"></canvas>
+    <div id="controls">
+        <input type="checkbox" class="options debugDisplays" checked> Disable Debug
+        <br>
+        <input type="checkbox" class="options showTriangles" checked> Show Triangles
+    </div>
+
+    <script>
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+
+        const firstScriptTag = document.getElementsByTagName("script")[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player("player", {
+                width: "75%",
+                height: "100%",
+                playerVars: {
+                    listType: "playlist",
+                    list: window.process.argv[window.process.argv.length - 1]
+                },
+                events: {
+                    onReady: window.opener.onPlayerReady,
+                    onStateChange: window.opener.onPlayerStateChange
+                }
+            });
+        }
+
+        var parentClosed = false;
+
+        window.opener.onbeforeunload = () => {
+            window.close();
+            parentClosed = true;
+        }
+        window.onbeforeunload = () => {
+            if (!parentClosed) window.opener.openYoutube();
+        }
+
+        const options = document.getElementsByClassName("options");
+        for (const elem of options) {
+            if (elem.type === "checkbox") {
+                elem.addEventListener("change", () => {
+                    window.opener.options[elem.classList[1]](elem.checked);
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
